@@ -14,7 +14,7 @@ def setup_teardown():
     # ✅ Set Chrome options (with Jenkins-compatible settings)
     chrome_options = Options()
     chrome_options.add_argument("--start-maximized")
-    chrome_options.add_experimental_option("detach", True")
+    chrome_options.add_experimental_option("detach", True)
 
     # ✅ Add headless and no-sandbox flags for Jenkins
     chrome_options.add_argument("--headless=new")
