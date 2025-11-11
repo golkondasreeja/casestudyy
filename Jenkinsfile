@@ -1,6 +1,17 @@
 pipeline {
   agent any
   stages {
+    stage('Check Python Setup') {
+    steps {
+        bat '''
+        echo Checking Python and pip installation...
+        python --version
+        pip --version
+        dir
+        '''
+    }
+}
+
     stage('Run Selenium Tests') {
       steps {
         echo "Running Selenium Tests for BookMood"
