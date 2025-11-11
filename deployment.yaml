@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookmood-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bookmood
+  template:
+    metadata:
+      labels:
+        app: bookmood
+    spec:
+      containers:
+        - name: bookmood
+          image: yourdockerhubusername/bookmood:latest
+          ports:
+            - containerPort: 5000

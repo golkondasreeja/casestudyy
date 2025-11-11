@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Vibe</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #d4fc79, #96e6a1);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .vibe-container {
+            background: #fff;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        select {
+            width: 200px;
+            padding: 0.5rem;
+            margin-top: 0.8rem;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        button {
+            margin-top: 1.5rem;
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="vibe-container">
+        <form action="/suggestions" method="POST">
+            <input type="hidden" name="username" value="{{ username }}">
+            <label for="mood">Select your vibe:</label><br>
+            <select name="mood" id="mood">
+                <option value="adventure">Adventure</option>
+                <option value="cozy">Cozy</option>
+                <option value="mysterious">Mysterious</option>
+            </select><br>
+            <button type="submit">See Books</button>
+        </form>
+    </div>
+</body>
+</html>

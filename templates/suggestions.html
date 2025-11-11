@@ -1,0 +1,23 @@
+<html>
+<head>
+  <title>Book Suggestions</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <center>
+    <h2>Hi {{ name }}! Here are your {{ vibe }} books:</h2>
+    {% if vibe == 'adventure' %}
+      <p>🌍 <b>The Hobbit</b> — J.R.R. Tolkien</p>
+      <p>🏝️ <b>Treasure Island</b> — Robert Louis Stevenson</p>
+    {% elif vibe == 'cozy' %}
+      <p>☕ <b>Anne of Green Gables</b> — L.M. Montgomery</p>
+      <p>🌸 <b>The Little Paris Bookshop</b> — Nina George</p>
+    {% elif vibe == 'mysterious' %}
+      <p>🕯️ <b>Gone Girl</b> — Gillian Flynn</p>
+      <p>🔍 <b>The Da Vinci Code</b> — Dan Brown</p>
+    {% endif %}
+    <br>
+    <a href="/">Logout</a>
+  </center>
+</body>
+</html>
