@@ -43,8 +43,9 @@ pipeline {
 
     stage('Push Docker Image') {
       steps {
-        bat 'docker tag bookmood:v1 yourdockerhubusername/bookmood:latest'
-        bat 'docker push yourdockerhubusername/bookmood:latest'
+        bat 'docker tag bookmood:v1 sreeja20082004/bookmood:latest'
+        bat 'docker push sreeja20082004/bookmood:latest'
+
       }
     }
 
