@@ -14,18 +14,17 @@ pipeline {
     }
 
     stage('Run Selenium Tests') {
-      steps {
-        echo "Running Selenium Tests for BookMood"
-        // Add --verbose to show errors clearly if pip fails
-        bat 'pip install -r requirements.txt --verbose || exit /b 1'
-        // Start the app in background
-        bat 'start /B python app.py'
-        // Wait a few seconds before running tests
-        bat 'ping 127.0.0.1 -n 5 > nul'
-        // Run pytest
-        bat 'pytest -v || exit /b 1'
-      }
-    }
+  steps {
+    echo "Running Selenium Tests for BookMood"
+    // Use python -m pip instead of pip
+    bat 'python -m pip install --upgrade pip'
+    bat 'python -m pip install -r requirements.txt --verbose || exit /b 1'
+    bat 'start /B python app.py'
+    bat 'ping 127.0.0.1 -n 5 > nul'
+    bat 'pytest -v || exit /b 1'
+  }
+}
+
 
     stage('Build Docker Image') {
       steps {
