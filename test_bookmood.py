@@ -5,8 +5,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
+
 
 @pytest.fixture
 def setup_teardown():
@@ -21,6 +22,7 @@ def setup_teardown():
     yield driver
     driver.quit()
 
+
 def get_alert_text(driver):
     # Wait for the alert to appear
     WebDriverWait(driver, 3).until(EC.alert_is_present())
@@ -28,6 +30,7 @@ def get_alert_text(driver):
     text = alert.text
     alert.accept()
     return text
+
 
 def test_empty_username(setup_teardown):
     driver = setup_teardown
@@ -38,6 +41,7 @@ def test_empty_username(setup_teardown):
     alert_text = get_alert_text(driver)
     assert alert_text == "Username cannot be empty."
 
+
 def test_empty_password(setup_teardown):
     driver = setup_teardown
     driver.get("http://127.0.0.1:5000/")
@@ -46,6 +50,7 @@ def test_empty_password(setup_teardown):
     driver.find_element(By.NAME, "sb").click()
     alert_text = get_alert_text(driver)
     assert alert_text == "Password cannot be empty."
+
 
 def test_short_password(setup_teardown):
     driver = setup_teardown
@@ -56,6 +61,7 @@ def test_short_password(setup_teardown):
     alert_text = get_alert_text(driver)
     assert alert_text == "Password must be at least 6 characters long."
 
+
 def test_valid_login_and_navigation(setup_teardown):
     driver = setup_teardown
     driver.get("http://127.0.0.1:5000/")
@@ -63,11 +69,22 @@ def test_valid_login_and_navigation(setup_teardown):
     driver.find_element(By.NAME, "pwd").send_keys("abc123")
     driver.find_element(By.NAME, "sb").click()
 
-    # Wait for navigation to /selector
+    # Wait for navigation to /selector page
     WebDriverWait(driver, 5).until(EC.url_contains("selector"))
     assert "selector" in driver.current_url
 
-    # Click on next page button (for example, name="vibe")
-    driver.find_element(By.NAME, "vibe").click()
+    # Wait for the mood dropdown to appear
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "mood"))
+    )
+
+    # Select a mood (e.g., adventure)
+    dropdown = Select(driver.find_element(By.ID, "mood"))
+    dropdown.select_by_value("adventure")
+
+    # Click the "See Books" button to submit the form
+    driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+
+    # Wait for redirection to /suggestions
     WebDriverWait(driver, 5).until(EC.url_contains("suggestions"))
     assert "suggestions" in driver.current_url
