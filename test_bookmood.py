@@ -3,17 +3,28 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.alert import Alert
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.fixture
 def setup_teardown():
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    # Set Chrome options
+    chrome_options = Options()
+    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_experimental_option("detach", True)
+
+    # Initialize driver
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver.implicitly_wait(5)  # wait up to 5s for elements to appear
     yield driver
     driver.quit()
 
 def get_alert_text(driver):
-    alert = Alert(driver)
+    # Wait for the alert to appear
+    WebDriverWait(driver, 3).until(EC.alert_is_present())
+    alert = driver.switch_to.alert
     text = alert.text
     alert.accept()
     return text
@@ -24,7 +35,6 @@ def test_empty_username(setup_teardown):
     driver.find_element(By.NAME, "username").clear()
     driver.find_element(By.NAME, "pwd").send_keys("Password123")
     driver.find_element(By.NAME, "sb").click()
-    time.sleep(1)
     alert_text = get_alert_text(driver)
     assert alert_text == "Username cannot be empty."
 
@@ -34,7 +44,6 @@ def test_empty_password(setup_teardown):
     driver.find_element(By.NAME, "username").send_keys("John")
     driver.find_element(By.NAME, "pwd").clear()
     driver.find_element(By.NAME, "sb").click()
-    time.sleep(1)
     alert_text = get_alert_text(driver)
     assert alert_text == "Password cannot be empty."
 
@@ -44,7 +53,6 @@ def test_short_password(setup_teardown):
     driver.find_element(By.NAME, "username").send_keys("Jane")
     driver.find_element(By.NAME, "pwd").send_keys("abc")
     driver.find_element(By.NAME, "sb").click()
-    time.sleep(1)
     alert_text = get_alert_text(driver)
     assert alert_text == "Password must be at least 6 characters long."
 
@@ -54,8 +62,12 @@ def test_valid_login_and_navigation(setup_teardown):
     driver.find_element(By.NAME, "username").send_keys("Alice")
     driver.find_element(By.NAME, "pwd").send_keys("abc123")
     driver.find_element(By.NAME, "sb").click()
-    time.sleep(2)
+
+    # Wait for navigation to /selector
+    WebDriverWait(driver, 5).until(EC.url_contains("selector"))
     assert "selector" in driver.current_url
+
+    # Click on next page button (for example, name="vibe")
     driver.find_element(By.NAME, "vibe").click()
-    time.sleep(2)
+    WebDriverWait(driver, 5).until(EC.url_contains("suggestions"))
     assert "suggestions" in driver.current_url
