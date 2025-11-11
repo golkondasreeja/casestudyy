@@ -11,12 +11,20 @@ from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.fixture
 def setup_teardown():
-    # Set Chrome options
+    # ✅ Set Chrome options (with Jenkins-compatible settings)
     chrome_options = Options()
     chrome_options.add_argument("--start-maximized")
-    chrome_options.add_experimental_option("detach", True)
+    chrome_options.add_experimental_option("detach", True")
 
-    # Initialize driver
+    # ✅ Add headless and no-sandbox flags for Jenkins
+    chrome_options.add_argument("--headless=new")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+
+    # ✅ Specify Chrome binary path (your system path)
+    chrome_options.binary_location = r"C:\Users\golko\AppData\Local\Google\Chrome\Application\chrome.exe"
+
+    # Initialize WebDriver
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     driver.implicitly_wait(5)  # wait up to 5s for elements to appear
     yield driver
